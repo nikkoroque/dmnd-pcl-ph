@@ -1,14 +1,10 @@
-import Faq from "@/app/components/app-faq";
-import AppFooter from "@/app/components/app-footer";
-import AppNavbar from "@/app/components/app-navbar";
-import ProductsView from "@/app/pages/lab-diamonds/page";
+import AppLayout from "@/app/components/app-layout";
+import ProductsView from "@/app/components/products-view";
+
 export default function Home() {
   return (
-    <>
-      <AppNavbar />
+    <AppLayout>
       <ProductsView />
-      <Faq />
-      <AppFooter />
-    </>
+    </AppLayout>
   );
 }

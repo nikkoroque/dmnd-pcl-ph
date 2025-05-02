@@ -2,28 +2,28 @@
 import { useEffect, useState } from "react";
 import ProductCard from "@/app/components/app-product-card";
 import DiamondToggle from "@/app/components/diamond-toggle";
-import DiamondFilters from "@/app/components/diamond-filters";
 import AppLayout from "@/app/components/app-layout";
+import DiamondFilters from "@/app/components/diamond-filters";
+
+type Product = {
+  Stock_NO: string;
+  Shape: string;
+  Color: string;
+  Clarity: string;
+  Carat: number;
+  Lab: string;
+  ["Diamond Parcel Price"]: number;
+  ["Total Amount"]: number;
+  ImageLink: string;
+  [key: string]: any;
+};
 
 type DiamondShape = 'Round' | 'Princess' | 'Cushion' | 'Emerald' | 'Oval' | 
                     'Radiant' | 'Asscher' | 'Marquise' | 'Heart' | 'Pear';
 type DiamondColor = 'D' | 'E' | 'F' | 'G' | 'H' | 'I' | 'J' | 'K';
 type DiamondClarity = 'FL' | 'IF' | 'VVS1' | 'VVS2' | 'VS1' | 'VS2' | 'SI1' | 'SI2';
 
-type Product = {
-  ["Lot #"]: string;
-  Shape: string;
-  Color: string;
-  Clarity: string;
-  Weight: number;
-  Lab: string;
-  ["Diamond Parcel Price"]: number;
-  ["Total Amount"]: number;
-  ["Diamond Image"]: string;
-  [key: string]: any;
-};
-
-export default function LabDiamondsPage() {
+export default function NaturalDiamondsPage() {
   const [products, setProducts] = useState<Product[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [total, setTotal] = useState(0);
@@ -52,7 +52,7 @@ export default function LabDiamondsPage() {
         maxCarat: filters.caratRange.max.toString()
       });
 
-      const res = await fetch(`/api/lab-diamonds?${queryParams}`);
+      const res = await fetch(`/api/natural-diamonds?${queryParams}`);
       const data = await res.json();
       setProducts(data.data);
       setTotal(data.total);
@@ -81,7 +81,7 @@ export default function LabDiamondsPage() {
 
   return (
     <AppLayout>
-      <DiamondToggle currentType="lab-grown" />
+      <DiamondToggle currentType="natural" />
       <div className="container mx-auto px-4 py-8">
         <DiamondFilters 
           onFilterChange={(newFilters) => {
@@ -92,7 +92,7 @@ export default function LabDiamondsPage() {
         <hr className="my-6" />
         {/* Products count info */}
         <div className="text-sm text-gray-600 mb-6">
-          Showing {showingStart}-{showingEnd} of {total} lab-grown diamonds
+          Showing {showingStart}-{showingEnd} of {total} natural diamonds
         </div>
 
         {/* Products grid */}
@@ -107,18 +107,18 @@ export default function LabDiamondsPage() {
               ))
             : products.map((product) => (
                 <ProductCard 
-                  key={product["Lot #"]} 
-                  product={product}
-                  diamondType="lab"
+                  key={product.Stock_NO} 
+                  product={product} 
+                  diamondType="natural"
                   fieldMapping={{
-                    lotNumber: "Lot #",
+                    lotNumber: "Stock_NO",
                     shape: "Shape",
                     color: "Color",
                     clarity: "Clarity",
-                    weight: "Weight",
+                    weight: "Carat",
                     lab: "Lab",
                     price: "Diamond Parcel Price",
-                    image: "Diamond Image"
+                    image: "ImageLink"
                   }}
                 />
               ))}
@@ -235,11 +235,6 @@ export default function LabDiamondsPage() {
                 />
               </svg>
             </button>
-          </div>
-
-          {/* Page info */}
-          <div className="text-sm text-gray-500 font-medium">
-            Page {page} of {totalPages}
           </div>
         </div>
       </div>

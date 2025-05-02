@@ -2,9 +2,9 @@ import Image from "next/image";
 import React from "react";
 import Logo from "../../../public/images/OFFICIAL-LOGO.png";
 
-const AppNavbar = () => {
+export default function AppNavbar() {
   return (
-    <>
+    <header className="relative z-10">
       <a href="#">
         <div className="bg-[#361111] flex items-center justify-center p-2 mx-auto">
           <p className="text-sm text-white">
@@ -12,7 +12,7 @@ const AppNavbar = () => {
           </p>
         </div>
       </a>
-      <nav className="shadow">
+      <nav className="shadow bg-white">
         <div className="container flex items-center justify-center p-6 mx-auto">
           <a href="#">
             <Image
@@ -24,8 +24,6 @@ const AppNavbar = () => {
           </a>
         </div>
       </nav>
-    </>
+    </header>
   );
-};
-
-export default AppNavbar;
+}

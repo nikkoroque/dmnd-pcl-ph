@@ -64,7 +64,7 @@ const Faq = () => {
       </h2>
       <p>
         Natural diamonds stand out for their rarity, formed over billions of
-        years with unique qualities that lab-grown alternatives can't match.
+        years with unique qualities that lab-grown alternatives can&apos;t match.
         While often considered a long-term investment, they also carry the
         appeal of owning something naturally rare and distinct.
       </p>

@@ -1,67 +1,88 @@
 import Image from "next/image";
+import DiamondPlaceholder from "../../../public/images/diamond-placeholder.jpg";
+import { useState } from "react";
+
+type Product = {
+  [key: string]: string | number;
+};
 
 type ProductCardProps = {
-  product: {
-    ["Lot #"]: string;
-    Shape: string;
-    Color: string;
-    Clarity: string;
-    Weight: number;
-    Lab: string;
-    ["Diamond Parcel Price"]: number;
-    ["Diamond Image"]: string;
+  product: Product;
+  diamondType: "lab" | "natural";
+  fieldMapping?: {
+    lotNumber: string;
+    shape: string;
+    color: string;
+    clarity: string;
+    weight: string;
+    lab: string;
+    price: string;
+    image: string;
   };
 };
 
-export default function ProductCard({ product }: ProductCardProps) {
+export default function ProductCard({ product, diamondType, fieldMapping }: ProductCardProps) {
+  const [isHovered, setIsHovered] = useState(false);
+
+  const getField = (field: string) => {
+    if (fieldMapping) {
+      return product[fieldMapping[field as keyof typeof fieldMapping]];
+    }
+    return product[field];
+  };
+
+  const formatPrice = (price: number) => {
+    return new Intl.NumberFormat('en-PH', {
+      style: 'currency',
+      currency: 'PHP',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+    }).format(price);
+  };
+
   return (
-    <div className="bg-white overflow-hidden hover:shadow-xl transition-shadow border border-gray-100">
-      <div className="relative aspect-square bg-gray-100">
+    <div
+      className="bg-white border border-gray-200 overflow-hidden transition-all duration-300 hover:shadow-lg"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
+      <div className="relative aspect-square">
         <Image
-          src={`${product["Diamond Image"]}`}
-          alt={`${product.Weight} Carat ${product.Shape}`}
+          src={getField('image') as string || DiamondPlaceholder}
+          alt={`Diamond ${getField('lotNumber')}`}
           fill
           className="object-cover"
         />
       </div>
-
-      <div className="p-6">
-        <div className="flex justify-between items-baseline mb-6">
-          <h2 className="text-sm">
-            {product.Weight} Carat {product.Shape}
-          </h2>
-          <span className="text-sm">
-            ₱{product["Diamond Parcel Price"].toLocaleString()}
+      <div className="p-4">
+        <div className="flex justify-between items-center mb-4">
+          <span className="text-md font-medium">
+            {getField('weight')} Carat {getField('shape')}
+          </span>
+          <span className="text-md font-medium">
+            {formatPrice(getField('price') as number)}
           </span>
         </div>
-
-        <div className="grid grid-cols-4 gap-3">
-          <div className="bg-gradient-to-br from-gray-50 to-white border border-gray-100 p-3 text-center hover:shadow-md transition-all duration-300">
-            <div className="text-sm font-semibold text-gray-800 tracking-wide mb-1">
-              Lab
-            </div>
-            <p className="text-xs font-medium">Diamond</p>
+        <div className="grid grid-cols-4 gap-4">
+          <div className="text-center bg-gray-50 p-2">
+            <div className="font-semibold text-sm mb-1">{diamondType === "lab" ? "Lab" : "Natural"}</div>
+            <div className="text-sm text-gray-600">Diamond</div>
           </div>
-          <div className="bg-gradient-to-br from-gray-50 to-white border border-gray-100 p-3 text-center hover:shadow-md transition-all duration-300">
-            <div className="text-sm font-semibold text-gray-800 tracking-wide mb-1">
-              Color
-            </div>
-            <p className="text-xs font-medium">{product.Color}</p>
+          <div className="text-center bg-gray-50 p-2">
+          <div className="font-semibold text-sm text-gray-600">Color</div>
+            <div className="text-sm mb-1">{getField('color')}</div>
+            
           </div>
-          <div className="bg-gradient-to-br from-gray-50 to-white border border-gray-100 p-3 text-center hover:shadow-md transition-all duration-300">
-            <div className="text-sm font-semibold text-gray-800 tracking-wide mb-1">
-              Clarity
-            </div>
-            <p className="text-xs font-medium">{product.Clarity}</p>
+          <div className="text-center bg-gray-50 p-2">
+          <div className="text-sm font-semibold text-gray-600">Clarity</div>
+            <div className="text-sm mb-1">{getField('clarity')}</div>
           </div>
-          <div className="bg-gradient-to-br from-gray-50 to-white border border-gray-100 p-3 text-center hover:shadow-md transition-all duration-300">
-            <div className="text-sm font-semibold text-gray-800 tracking-wide mb-1">
-              {product.Lab}
-            </div>
-            <p className="text-xs font-medium">Certified</p>
+          <div className="text-center bg-gray-50 p-2">
+            <div className="font-semibold text-sm text-gray-600">Certified</div>
+            <div className="text-sm mb-1">{getField('lab')}</div>
           </div>
         </div>
       </div>
     </div>
   );
-}
+} 

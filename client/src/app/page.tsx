@@ -1,13 +1,10 @@
-import Faq from "@/components/app-faq";
-import AppFooter from "@/components/app-footer";
-import AppNavbar from "@/components/app-navbar";
+import AppLayout from "@/app/components/app-layout";
+import ProductsView from "@/app/components/products-view";
 
 export default function Home() {
   return (
-    <>
-    <AppNavbar />
-    <Faq />
-    <AppFooter />
-    </>
+    <AppLayout>
+      <ProductsView />
+    </AppLayout>
   );
 }

@@ -3,6 +3,19 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import fs from 'fs';
 import path from 'path';
 
+type DiamondProduct = {
+  'Lot #': string;
+  Shape: string;
+  Color: string;
+  Clarity: string;
+  Weight: number;
+  Lab: string;
+  'Diamond Parcel Price': number;
+  'Total Amount': number;
+  'Diamond Image': string;
+  [key: string]: string | number;
+};
+
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
   const page = parseInt(req.query.page as string) || 1;
   const limit = parseInt(req.query.limit as string) || 20;
@@ -20,9 +33,9 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
   try {
     const filePath = path.join(process.cwd(), 'public', 'data', 'sup_one_current.json');
     const rawData = fs.readFileSync(filePath, 'utf8');
-    let products = JSON.parse(rawData);
+    let products = JSON.parse(rawData) as DiamondProduct[];
 
-    products = products.filter((product: any) => {
+    products = products.filter((product) => {
       // General search
       const matchesSearch = !search || (
         product['Lot #']?.toString().toLowerCase().includes(search) ||
@@ -33,23 +46,13 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
         product['Clarity']?.toString().toLowerCase().includes(search)
       );
 
-      const matchesShape =
-  shape.length === 0 || shape.includes(product['Shape']?.toString().toLowerCase().trim());
+      const matchesShape = shape.length === 0 || shape.includes(product['Shape']?.toString().toLowerCase().trim());
       const matchesColor = color.length === 0 || color.includes(product['Color']?.toLowerCase());
       const matchesClarity = clarity.length === 0 || clarity.includes(product['Clarity']?.toLowerCase());
-      const matchesPrice =
-        product['Diamond Parcel Price'] >= minPrice && product['Diamond Parcel Price'] <= maxPrice;
-      const matchesCarat =
-        product['Weight'] >= minCarat && product['Weight'] <= maxCarat;
+      const matchesPrice = product['Diamond Parcel Price'] >= minPrice && product['Diamond Parcel Price'] <= maxPrice;
+      const matchesCarat = product['Weight'] >= minCarat && product['Weight'] <= maxCarat;
 
-      return (
-        matchesSearch &&
-        matchesShape &&
-        matchesColor &&
-        matchesClarity &&
-        matchesPrice &&
-        matchesCarat
-      );
+      return matchesSearch && matchesShape && matchesColor && matchesClarity && matchesPrice && matchesCarat;
     });
 
     const paginated = products.slice(offset, offset + limit);

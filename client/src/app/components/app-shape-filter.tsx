@@ -1,8 +1,6 @@
 import React from 'react'
 
-type AppShapeFilterProps = {}
-
-const AppShapeFilter = (props: AppShapeFilterProps) => {
+const AppShapeFilter = () => {
   return (
     <div>AppShapeFilter</div>
   )

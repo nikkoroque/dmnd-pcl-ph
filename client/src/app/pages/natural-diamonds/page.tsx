@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import ProductCard from "@/app/components/app-product-card";
 import DiamondToggle from "@/app/components/diamond-toggle";
 import AppLayout from "@/app/components/app-layout";
@@ -15,7 +15,7 @@ type Product = {
   ["Diamond Parcel Price"]: number;
   ["Total Amount"]: number;
   ImageLink: string;
-  [key: string]: any;
+  [key: string]: string | number;
 };
 
 type DiamondShape = 'Round' | 'Princess' | 'Cushion' | 'Emerald' | 'Oval' | 
@@ -37,7 +37,7 @@ export default function NaturalDiamondsPage() {
   });
   const limit = 20;
 
-  const fetchProducts = async (pageNumber: number) => {
+  const fetchProducts = useCallback(async (pageNumber: number) => {
     setIsLoading(true);
     try {
       const queryParams = new URLSearchParams({
@@ -61,7 +61,7 @@ export default function NaturalDiamondsPage() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [filters, limit]);
 
   const handlePageChange = async (newPage: number) => {
     await new Promise((resolve) => {
@@ -73,7 +73,7 @@ export default function NaturalDiamondsPage() {
 
   useEffect(() => {
     fetchProducts(page);
-  }, [page, filters]);
+  }, [page, filters, fetchProducts]);
 
   const totalPages = Math.ceil(total / limit);
   const showingStart = (page - 1) * limit + 1;

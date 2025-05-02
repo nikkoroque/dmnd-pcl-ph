@@ -1,6 +1,5 @@
 import Image from "next/image";
 import DiamondPlaceholder from "../../../public/images/diamond-placeholder.jpg";
-import { useState } from "react";
 
 type Product = {
   [key: string]: string | number;
@@ -22,8 +21,6 @@ type ProductCardProps = {
 };
 
 export default function ProductCard({ product, diamondType, fieldMapping }: ProductCardProps) {
-  const [isHovered, setIsHovered] = useState(false);
-
   const getField = (field: string) => {
     if (fieldMapping) {
       return product[fieldMapping[field as keyof typeof fieldMapping]];
@@ -43,8 +40,6 @@ export default function ProductCard({ product, diamondType, fieldMapping }: Prod
   return (
     <div
       className="bg-white border border-gray-200 overflow-hidden transition-all duration-300 hover:shadow-lg"
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
     >
       <div className="relative aspect-square">
         <Image

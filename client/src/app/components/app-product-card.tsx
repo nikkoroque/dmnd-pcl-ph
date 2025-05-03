@@ -54,7 +54,7 @@ export default function ProductCard({
           />
         </div>
 
-        <div className="flex justify-between items-center mb-4">
+        <div className="flex justify-between items-center mb-4 p-2">
           <span className="text-md font-medium">
             {getField("weight")} Carat {getField("shape")}
           </span>
@@ -62,9 +62,9 @@ export default function ProductCard({
             {formatPrice(getField("price") as number)}
           </span>
         </div>
-        <div className="grid grid-cols-4 gap-4">
+        <div className="grid grid-cols-4 gap-4 p-2">
           <div className="text-center bg-gray-50 p-2">
-            <div className="font-semibold text-sm mb-1">
+            <div className="font-semibold text-sm text-gray-600 mb-1">
               {diamondType === "lab" ? "Lab" : "Natural"}
             </div>
             <div className="text-sm text-gray-600">Diamond</div>

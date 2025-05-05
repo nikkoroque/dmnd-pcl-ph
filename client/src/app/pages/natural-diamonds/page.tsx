@@ -18,10 +18,27 @@ type Product = {
   [key: string]: string | number;
 };
 
-type DiamondShape = 'Round' | 'Princess' | 'Cushion' | 'Emerald' | 'Oval' | 
-                    'Radiant' | 'Asscher' | 'Marquise' | 'Heart' | 'Pear';
-type DiamondColor = 'D' | 'E' | 'F' | 'G' | 'H' | 'I' | 'J' | 'K';
-type DiamondClarity = 'FL' | 'IF' | 'VVS1' | 'VVS2' | 'VS1' | 'VS2' | 'SI1' | 'SI2';
+type DiamondShape =
+  | "Round"
+  | "Princess"
+  | "Cushion"
+  | "Emerald"
+  | "Oval"
+  | "Radiant"
+  | "Asscher"
+  | "Marquise"
+  | "Heart"
+  | "Pear";
+type DiamondColor = "D" | "E" | "F" | "G" | "H" | "I" | "J" | "K";
+type DiamondClarity =
+  | "FL"
+  | "IF"
+  | "VVS1"
+  | "VVS2"
+  | "VS1"
+  | "VS2"
+  | "SI1"
+  | "SI2";
 
 export default function NaturalDiamondsPage() {
   const [products, setProducts] = useState<Product[]>([]);
@@ -31,37 +48,44 @@ export default function NaturalDiamondsPage() {
   const [filters, setFilters] = useState({
     shapes: [] as DiamondShape[],
     priceRange: { min: 200, max: 50000000 },
-    caratRange: { min: 0.01, max: 50.00 },
+    caratRange: { min: 0.01, max: 50.0 },
     colors: [] as DiamondColor[],
-    clarity: [] as DiamondClarity[]
+    clarity: [] as DiamondClarity[],
   });
+  const [search, setSearch] = useState("");
   const limit = 20;
 
-  const fetchProducts = useCallback(async (pageNumber: number) => {
-    setIsLoading(true);
-    try {
-      const queryParams = new URLSearchParams({
-        page: pageNumber.toString(),
-        limit: limit.toString(),
-        ...(filters.shapes.length > 0 && { shape: filters.shapes.join(',') }),
-        ...(filters.colors.length > 0 && { color: filters.colors.join(',') }),
-        ...(filters.clarity.length > 0 && { clarity: filters.clarity.join(',') }),
-        minPrice: filters.priceRange.min.toString(),
-        maxPrice: filters.priceRange.max.toString(),
-        minCarat: filters.caratRange.min.toString(),
-        maxCarat: filters.caratRange.max.toString()
-      });
+  const fetchProducts = useCallback(
+    async (pageNumber: number, searchTerm = search) => {
+      setIsLoading(true);
+      try {
+        const queryParams = new URLSearchParams({
+          page: pageNumber.toString(),
+          limit: limit.toString(),
+          ...(filters.shapes.length > 0 && { shape: filters.shapes.join(",") }),
+          ...(filters.colors.length > 0 && { color: filters.colors.join(",") }),
+          ...(filters.clarity.length > 0 && {
+            clarity: filters.clarity.join(","),
+          }),
+          minPrice: filters.priceRange.min.toString(),
+          maxPrice: filters.priceRange.max.toString(),
+          minCarat: filters.caratRange.min.toString(),
+          maxCarat: filters.caratRange.max.toString(),
+          ...(searchTerm && { search: searchTerm }),
+        });
 
-      const res = await fetch(`/api/natural-diamonds?${queryParams}`);
-      const data = await res.json();
-      setProducts(data.data);
-      setTotal(data.total);
-    } catch (error) {
-      console.error("Error fetching products:", error);
-    } finally {
-      setIsLoading(false);
-    }
-  }, [filters, limit]);
+        const res = await fetch(`/api/natural-diamonds?${queryParams}`);
+        const data = await res.json();
+        setProducts(data.data);
+        setTotal(data.total);
+      } catch (error) {
+        console.error("Error fetching products:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [filters, limit, search]
+  );
 
   const handlePageChange = async (newPage: number) => {
     await new Promise((resolve) => {
@@ -72,8 +96,8 @@ export default function NaturalDiamondsPage() {
   };
 
   useEffect(() => {
-    fetchProducts(page);
-  }, [page, filters, fetchProducts]);
+    fetchProducts(page, search);
+  }, [page, filters, search, fetchProducts]);
 
   const totalPages = Math.ceil(total / limit);
   const showingStart = (page - 1) * limit + 1;
@@ -83,11 +107,14 @@ export default function NaturalDiamondsPage() {
     <AppLayout>
       <DiamondToggle currentType="natural" />
       <div className="container mx-auto px-4 py-8">
-        <DiamondFilters 
+        <DiamondFilters
           onFilterChange={(newFilters) => {
             setPage(1); // Reset to first page when filters change
             setFilters(newFilters);
           }}
+          search={search}
+          onSearchChange={setSearch}
+          diamondType="natural"
         />
         <hr className="my-6" />
         {/* Products count info */}
@@ -106,9 +133,9 @@ export default function NaturalDiamondsPage() {
                 />
               ))
             : products.map((product) => (
-                <ProductCard 
-                  key={product.Stock_NO} 
-                  product={product} 
+                <ProductCard
+                  key={product.Stock_NO}
+                  product={product}
                   diamondType="natural"
                   fieldMapping={{
                     lotNumber: "Stock_NO",
@@ -118,7 +145,7 @@ export default function NaturalDiamondsPage() {
                     weight: "Carat",
                     lab: "Lab",
                     price: "Diamond Parcel Price",
-                    image: "ImageLink"
+                    image: "ImageLink",
                   }}
                 />
               ))}

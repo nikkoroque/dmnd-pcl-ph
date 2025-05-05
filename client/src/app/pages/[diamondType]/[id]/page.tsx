@@ -115,7 +115,9 @@ export default function ProductDetailPage() {
             video: "VideoLink",
           };
 
-    return product[fieldMapping[field as keyof typeof fieldMapping] as keyof typeof product];
+    return product[
+      fieldMapping[field as keyof typeof fieldMapping] as keyof typeof product
+    ];
   };
 
   return (
@@ -131,13 +133,14 @@ export default function ProductDetailPage() {
                   className="w-full h-full"
                   allowFullScreen
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  style={{ border: 'none' }}
+                  style={{ border: "none" }}
                 />
               ) : (
                 <Image
                   src={(getField("image") as string) || DiamondPlaceholder}
                   alt={`Diamond ${getField("lotNumber")}`}
                   fill
+                  sizes="(max-width: 768px) 100vw, 50vw"
                   className="object-cover"
                 />
               )}
@@ -148,43 +151,58 @@ export default function ProductDetailPage() {
           <div className="space-y-8">
             <div className="pb-6">
               <h1 className="text-4xl font-light mb-2 text-gray-900 tracking-wide">
-                {getField("weight")} Carat {getField("shape")}  {diamondType === "lab"
-                    ? `Lab-Grown`
-                    : `Natural`} Diamond
+                {getField("weight")} Carat {getField("shape")}{" "}
+                {diamondType === "lab" ? `Lab-Grown` : `Natural`} Diamond
               </h1>
-              
+
               <div className="h-1 w-20 rounded bg-gradient-to-r from-gray-200 to-gray-50 mb-2" />
             </div>
 
             <div className="flex items-center justify-between mb-2">
-                <h2 className="text-lg font-semibold tracking-wide text-gray-900">Diamond Information</h2>
-                <span className="text-lg text-gray-900">{formatPrice(getField("price") as number)}</span>
-              </div>
+              <h2 className="text-lg font-semibold tracking-wide text-gray-900">
+                Diamond Information
+              </h2>
+              <span className="text-lg text-gray-900">
+                {formatPrice(getField("price") as number)}
+              </span>
+            </div>
             {/* Diamond Information Section (two columns, alternating backgrounds) */}
             <div className="grid grid-cols-2 gap-0">
               <div className="px-6 py-4 flex justify-between items-center bg-white">
                 <span className="text-gray-700 font-medium">Stock Number:</span>
-                <span className="text-gray-900 font-semibold">{getField("lotNumber")}</span>
+                <span className="text-gray-900 font-semibold">
+                  {getField("lotNumber")}
+                </span>
               </div>
               <div className="px-6 py-4 flex justify-between items-center bg-white">
                 <span className="text-gray-700 font-medium">Shape:</span>
-                <span className="text-gray-900 font-semibold">{getField("shape")}</span>
+                <span className="text-gray-900 font-semibold">
+                  {getField("shape")}
+                </span>
               </div>
               <div className="px-6 py-4 flex justify-between items-center bg-gray-50">
                 <span className="text-gray-700 font-medium">Carat Weight:</span>
-                <span className="text-gray-900 font-semibold">{getField("weight")} ct.</span>
+                <span className="text-gray-900 font-semibold">
+                  {getField("weight")} ct.
+                </span>
               </div>
               <div className="px-6 py-4 flex justify-between items-center bg-gray-50">
                 <span className="text-gray-700 font-medium">Color:</span>
-                <span className="text-gray-900 font-semibold">{getField("color")}</span>
+                <span className="text-gray-900 font-semibold">
+                  {getField("color")}
+                </span>
               </div>
               <div className="px-6 py-4 flex justify-between items-center bg-white">
                 <span className="text-gray-700 font-medium">Clarity:</span>
-                <span className="text-gray-900 font-semibold">{getField("clarity")}</span>
+                <span className="text-gray-900 font-semibold">
+                  {getField("clarity")}
+                </span>
               </div>
               <div className="px-6 py-4 flex justify-between items-center bg-white">
                 <span className="text-gray-700 font-medium">Cut:</span>
-                <span className="text-gray-900 font-semibold">{getField("cut")}</span>
+                <span className="text-gray-900 font-semibold">
+                  {getField("cut")}
+                </span>
               </div>
               <div className="px-6 py-4 flex justify-between items-center bg-gray-50">
                 <span className="text-gray-700 font-medium">Measurements:</span>
@@ -196,31 +214,47 @@ export default function ProductDetailPage() {
               </div>
               <div className="px-6 py-4 flex justify-between items-center bg-gray-50">
                 <span className="text-gray-700 font-medium">Polish</span>
-                <span className="text-gray-900 font-semibold">{getField("polish")}</span>
+                <span className="text-gray-900 font-semibold">
+                  {getField("polish")}
+                </span>
               </div>
               <div className="px-6 py-4 flex justify-between items-center bg-white">
                 <span className="text-gray-700 font-medium">Table %:</span>
-                <span className="text-gray-900 font-semibold">{getField("table")}%</span>
+                <span className="text-gray-900 font-semibold">
+                  {getField("table")}%
+                </span>
               </div>
               <div className="px-6 py-4 flex justify-between items-center bg-white">
                 <span className="text-gray-700 font-medium">Culet:</span>
-                <span className="text-gray-900 font-semibold">{getField("culet")}</span>
+                <span className="text-gray-900 font-semibold">
+                  {getField("culet")}
+                </span>
               </div>
               <div className="px-6 py-4 flex justify-between items-center bg-gray-50">
                 <span className="text-gray-700 font-medium">Flourescent:</span>
-                <span className="text-gray-900 font-semibold">{getField("fluorescence")}</span>
+                <span className="text-gray-900 font-semibold">
+                  {getField("fluorescence")}
+                </span>
               </div>
               <div className="px-6 py-4 flex justify-between items-center bg-gray-50">
                 <span className="text-gray-700 font-medium">Symmetry:</span>
-                <span className="text-gray-900 font-semibold">{getField("symmetry")}</span>
+                <span className="text-gray-900 font-semibold">
+                  {getField("symmetry")}
+                </span>
               </div>
               <div className="px-6 py-4 flex justify-between items-center bg-white">
                 <span className="text-gray-700 font-medium">Certified:</span>
-                <span className="text-gray-900 font-semibold">{getField("lab")}</span>
+                <span className="text-gray-900 font-semibold">
+                  {getField("lab")}
+                </span>
               </div>
               <div className="px-6 py-4 flex justify-between items-center bg-white">
-                <span className="text-gray-700 font-medium">Certificate No:</span>
-                <span className="text-gray-900 font-semibold">{getField("cerfiticate_no")}</span>
+                <span className="text-gray-700 font-medium">
+                  Certificate No:
+                </span>
+                <span className="text-gray-900 font-semibold">
+                  {getField("cerfiticate_no")}
+                </span>
               </div>
             </div>
           </div>

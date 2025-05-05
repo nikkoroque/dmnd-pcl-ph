@@ -72,7 +72,7 @@ const Faq = () => {
       <div className="grid grid-cols-1 gap-8 mt-8 lg:mt-16 md:grid-cols-2 xl:grid-cols-3">
         {faqData.map((faq, index) => (
           <div key={index}>
-            <div className="inline-block p-3 text-white bg-[#342e37] rounded-lg">
+            <div className="inline-block p-3 text-white bg-[#361111] rounded-lg">
               <QuestionIcon />
             </div>
 

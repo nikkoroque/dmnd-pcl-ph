@@ -2,8 +2,8 @@
 import { useEffect, useState, useCallback } from "react";
 import ProductCard from "@/app/components/app-product-card";
 import DiamondToggle from "@/app/components/diamond-toggle";
-import AppLayout from "@/app/components/app-layout";
 import DiamondFilters from "@/app/components/diamond-filters";
+import AppLayout from "@/app/components/app-layout";
 
 type Product = {
   Stock_NO: string;

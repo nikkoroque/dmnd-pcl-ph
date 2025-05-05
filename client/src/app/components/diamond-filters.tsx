@@ -51,7 +51,7 @@ export default function DiamondFilters({ onFilterChange }: FilterProps) {
   const [selectedShapes, setSelectedShapes] = useState<DiamondShape[]>([]);
   const [selectedColors, setSelectedColors] = useState<DiamondColor[]>([]);
   const [selectedClarity, setSelectedClarity] = useState<DiamondClarity[]>([]);
-  const [priceRange, setPriceRange] = useState({ min: 200, max: 50000000 });
+  const [priceRange, setPriceRange] = useState({ min: 200, max: 100000000 });
   const [caratRange, setCaratRange] = useState({ min: 0.01, max: 50.00 });
 
   const resetFilters = () => {
@@ -62,7 +62,7 @@ export default function DiamondFilters({ onFilterChange }: FilterProps) {
     setCaratRange({ min: 0.01, max: 50.00 });
     onFilterChange({
       shapes: [],
-      priceRange: { min: 200, max: 50000000 },
+      priceRange: { min: 200, max: 100000000 },
       caratRange: { min: 0.01, max: 50.00 },
       colors: [],
       clarity: []

@@ -5,6 +5,7 @@ import path from 'path';
 
 type DiamondProduct = {
   Stock_NO: string;
+  CERT_NO: string;
   Shape: string;
   Color: string;
   Clarity: string;
@@ -39,11 +40,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
       // General search
       const matchesSearch = !search || (
         product.Stock_NO?.toString().toLowerCase().includes(search) ||
-        product.Shape?.toString().toLowerCase().includes(search) ||
-        product['Diamond Parcel Price']?.toString().includes(search) ||
-        product.Carat?.toString().includes(search) ||
-        product.Color?.toString().toLowerCase().includes(search) ||
-        product.Clarity?.toString().toLowerCase().includes(search)
+        product.CERT_NO?.toString().toLowerCase().includes(search)
       );
 
       const matchesShape = shape.length === 0 || shape.includes(product.Shape?.toString().toLowerCase().trim());

@@ -1,10 +1,5 @@
-import AppLayout from "@/app/components/app-layout";
-import ProductsView from "@/app/components/products-view";
+import HomePage from "@/app/pages/home/page";
 
 export default function Home() {
-  return (
-    <AppLayout>
-      <ProductsView />
-    </AppLayout>
-  );
+  return <HomePage />;
 }

@@ -51,19 +51,19 @@ export default function DiamondFilters({ onFilterChange }: FilterProps) {
   const [selectedShapes, setSelectedShapes] = useState<DiamondShape[]>([]);
   const [selectedColors, setSelectedColors] = useState<DiamondColor[]>([]);
   const [selectedClarity, setSelectedClarity] = useState<DiamondClarity[]>([]);
-  const [priceRange, setPriceRange] = useState({ min: 200, max: 100000000 });
-  const [caratRange, setCaratRange] = useState({ min: 0.01, max: 50.00 });
+  const [priceRange, setPriceRange] = useState({ min: 0, max: 100000000 });
+  const [caratRange, setCaratRange] = useState({ min: 0.00, max: 50.00 });
 
   const resetFilters = () => {
     setSelectedShapes([]);
     setSelectedColors([]);
     setSelectedClarity([]);
-    setPriceRange({ min: 200, max: 100000000 });
-    setCaratRange({ min: 0.01, max: 50.00 });
+    setPriceRange({ min: 0, max: 100000000 });
+    setCaratRange({ min: 0.00, max: 50.00 });
     onFilterChange({
       shapes: [],
-      priceRange: { min: 200, max: 100000000 },
-      caratRange: { min: 0.01, max: 50.00 },
+      priceRange: { min: 0, max: 100000000 },
+      caratRange: { min: 0.00, max: 50.00 },
       colors: [],
       clarity: []
     });
@@ -183,7 +183,7 @@ export default function DiamondFilters({ onFilterChange }: FilterProps) {
           <div className="mb-8">
             <h3 className="text-sm font-semibold text-gray-700 mb-4">Price</h3>
             <RangeSlider
-              min={200}
+              min={0}
               max={100000000}
               step={100}
               value={priceRange}
@@ -232,9 +232,9 @@ export default function DiamondFilters({ onFilterChange }: FilterProps) {
               Carat
             </h3>
             <RangeSlider
-              min={0.01}
+              min={0.00}
               max={50.00}
-              step={0.01}
+              step={0.00}
               value={caratRange}
               onChange={newRange => {
                 setCaratRange(newRange);

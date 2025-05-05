@@ -4,7 +4,6 @@ import ProductCard from "@/app/components/app-product-card";
 import DiamondToggle from "@/app/components/diamond-toggle";
 import DiamondFilters from "@/app/components/diamond-filters";
 import AppLayout from "@/app/components/app-layout";
-import SearchInput from "@/app/components/search-input";
 
 type Product = {
   Stock_NO: string;

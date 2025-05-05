@@ -2,7 +2,6 @@
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import AppLayout from "@/app/components/app-layout";
-import DiamondToggle from "@/app/components/diamond-toggle";
 import Image from "next/image";
 import DiamondPlaceholder from "../../../../../public/images/diamond-placeholder.jpg";
 import ProductsView from "@/app/components/products-view";

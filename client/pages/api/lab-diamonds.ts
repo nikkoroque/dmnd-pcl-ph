@@ -39,11 +39,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
       // General search
       const matchesSearch = !search || (
         product['Lot #']?.toString().toLowerCase().includes(search) ||
-        product['Shape']?.toString().toLowerCase().includes(search) ||
-        product['Diamond Parcel Price']?.toString().includes(search) ||
-        product['Weight']?.toString().includes(search) ||
-        product['Color']?.toString().toLowerCase().includes(search) ||
-        product['Clarity']?.toString().toLowerCase().includes(search)
+        product['Certificate #']?.toString().toLowerCase().includes(search)
       );
 
       const matchesShape = shape.length === 0 || shape.includes(product['Shape']?.toString().toLowerCase().trim());

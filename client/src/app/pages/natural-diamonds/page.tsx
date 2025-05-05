@@ -4,6 +4,7 @@ import ProductCard from "@/app/components/app-product-card";
 import DiamondToggle from "@/app/components/diamond-toggle";
 import DiamondFilters from "@/app/components/diamond-filters";
 import AppLayout from "@/app/components/app-layout";
+import SearchInput from "@/app/components/search-input";
 
 type Product = {
   Stock_NO: string;
@@ -35,9 +36,10 @@ export default function NaturalDiamondsPage() {
     colors: [] as DiamondColor[],
     clarity: [] as DiamondClarity[]
   });
+  const [search, setSearch] = useState("");
   const limit = 20;
 
-  const fetchProducts = useCallback(async (pageNumber: number) => {
+  const fetchProducts = useCallback(async (pageNumber: number, searchTerm = search) => {
     setIsLoading(true);
     try {
       const queryParams = new URLSearchParams({
@@ -49,7 +51,8 @@ export default function NaturalDiamondsPage() {
         minPrice: filters.priceRange.min.toString(),
         maxPrice: filters.priceRange.max.toString(),
         minCarat: filters.caratRange.min.toString(),
-        maxCarat: filters.caratRange.max.toString()
+        maxCarat: filters.caratRange.max.toString(),
+        ...(searchTerm && { search: searchTerm })
       });
 
       const res = await fetch(`/api/natural-diamonds?${queryParams}`);
@@ -61,7 +64,7 @@ export default function NaturalDiamondsPage() {
     } finally {
       setIsLoading(false);
     }
-  }, [filters, limit]);
+  }, [filters, limit, search]);
 
   const handlePageChange = async (newPage: number) => {
     await new Promise((resolve) => {
@@ -72,8 +75,8 @@ export default function NaturalDiamondsPage() {
   };
 
   useEffect(() => {
-    fetchProducts(page);
-  }, [page, filters, fetchProducts]);
+    fetchProducts(page, search);
+  }, [page, filters, search, fetchProducts]);
 
   const totalPages = Math.ceil(total / limit);
   const showingStart = (page - 1) * limit + 1;
@@ -88,6 +91,8 @@ export default function NaturalDiamondsPage() {
             setPage(1); // Reset to first page when filters change
             setFilters(newFilters);
           }}
+          search={search}
+          onSearchChange={setSearch}
         />
         <hr className="my-6" />
         {/* Products count info */}

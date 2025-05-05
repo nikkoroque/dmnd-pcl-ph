@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import RangeSlider from './range-slider';
+import SearchInput from './search-input';
 
 // Diamond shape icons
 import RoundIcon from '../../../public/icons/round.svg';
@@ -29,6 +30,8 @@ type FilterProps = {
     colors: DiamondColor[];
     clarity: DiamondClarity[];
   }) => void;
+  search: string;
+  onSearchChange: (value: string) => void;
 };
 
 const shapes: { type: DiamondShape; icon: string }[] = [
@@ -47,7 +50,7 @@ const shapes: { type: DiamondShape; icon: string }[] = [
 const colors: DiamondColor[] = ['K', 'J', 'I', 'H', 'G', 'F', 'E', 'D'];
 const clarityGrades: DiamondClarity[] = ['SI2', 'SI1', 'VS2', 'VS1', 'VVS2', 'VVS1', 'IF', 'FL'];
 
-export default function DiamondFilters({ onFilterChange }: FilterProps) {
+export default function DiamondFilters({ onFilterChange, search, onSearchChange }: FilterProps) {
   const [selectedShapes, setSelectedShapes] = useState<DiamondShape[]>([]);
   const [selectedColors, setSelectedColors] = useState<DiamondColor[]>([]);
   const [selectedClarity, setSelectedClarity] = useState<DiamondClarity[]>([]);
@@ -62,11 +65,12 @@ export default function DiamondFilters({ onFilterChange }: FilterProps) {
     setCaratRange({ min: 0.00, max: 50.00 });
     onFilterChange({
       shapes: [],
-      priceRange: { min: 0, max: 100000000 },
+      priceRange: { min: 0, max: 50000000 },
       caratRange: { min: 0.00, max: 50.00 },
       colors: [],
       clarity: []
     });
+    onSearchChange("");
   };
 
   const handleShapeToggle = (shape: DiamondShape) => {
@@ -122,6 +126,14 @@ export default function DiamondFilters({ onFilterChange }: FilterProps) {
 
   return (
     <div className="bg-white p-4">
+      <div className="mb-4">
+        <SearchInput
+          value={search}
+          onChange={onSearchChange}
+          placeholder="Search..."
+          onSearch={onSearchChange}
+        />
+      </div>
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-lg font-semibold text-gray-900">Filters</h2>
         <button

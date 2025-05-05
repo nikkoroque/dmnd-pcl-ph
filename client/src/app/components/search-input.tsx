@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 
 type SearchInputProps = {
   value: string;
@@ -7,7 +7,12 @@ type SearchInputProps = {
   onSearch: (value: string) => void;
 };
 
-export default function SearchInput({ value, onChange, placeholder, onSearch }: SearchInputProps) {
+export default function SearchInput({
+  value,
+  onChange,
+  placeholder,
+  onSearch,
+}: SearchInputProps) {
   const [inputValue, setInputValue] = useState(value);
 
   useEffect(() => {
@@ -20,7 +25,7 @@ export default function SearchInput({ value, onChange, placeholder, onSearch }: 
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') {
+    if (e.key === "Enter") {
       onSearch(inputValue);
     }
   };
@@ -30,21 +35,21 @@ export default function SearchInput({ value, onChange, placeholder, onSearch }: 
   };
 
   return (
-    <div className="flex items-center gap-2 w-full max-w-md">
+    <div className="flex items-center gap-2 w-full">
       <input
         type="text"
         value={inputValue}
         onChange={handleInputChange}
         onKeyDown={handleKeyDown}
-        placeholder={placeholder || 'Search...'}
+        placeholder={placeholder || "Search..."}
         className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#361111]"
       />
       <button
         onClick={handleSearchClick}
-        className="px-4 py-2 bg-[#361111] text-white rounded-md hover:bg-[#4a1717] transition-colors"
+        className="px-4 py-2 bg-[#1a1a1a] text-white rounded-md hover:bg-[#4a1717] transition-colors"
       >
         Search
       </button>
     </div>
   );
-} 
+}

@@ -1,26 +1,43 @@
-import { useState } from 'react';
-import Image from 'next/image';
-import RangeSlider from './range-slider';
-import SearchInput from './search-input';
+import { useState } from "react";
+import Image from "next/image";
+import RangeSlider from "./range-slider";
+import SearchInput from "./search-input";
 
 // Diamond shape icons
-import RoundIcon from '../../../public/icons/round.svg';
-import PrincessIcon from '../../../public/icons/princess.svg';
-import CushionIcon from '../../../public/icons/cushion.svg';
-import EmeraldIcon from '../../../public/icons/emerald.svg';
-import OvalIcon from '../../../public/icons/oval.svg';
-import RadiantIcon from '../../../public/icons/radiant.svg';
-import AsscherIcon from '../../../public/icons/asscher.svg';
-import MarquiseIcon from '../../../public/icons/marquise.svg';
-import HeartIcon from '../../../public/icons/heart.svg';
-import PearIcon from '../../../public/icons/pear.svg';
+import RoundIcon from "../../../public/icons/round.svg";
+import PrincessIcon from "../../../public/icons/princess.svg";
+import CushionIcon from "../../../public/icons/cushion.svg";
+import EmeraldIcon from "../../../public/icons/emerald.svg";
+import OvalIcon from "../../../public/icons/oval.svg";
+import RadiantIcon from "../../../public/icons/radiant.svg";
+import AsscherIcon from "../../../public/icons/asscher.svg";
+import MarquiseIcon from "../../../public/icons/marquise.svg";
+import HeartIcon from "../../../public/icons/heart.svg";
+import PearIcon from "../../../public/icons/pear.svg";
 
-type DiamondShape = 'Round' | 'Princess' | 'Cushion' | 'Emerald' | 'Oval' | 
-                    'Radiant' | 'Asscher' | 'Marquise' | 'Heart' | 'Pear';
+type DiamondShape =
+  | "Round"
+  | "Princess"
+  | "Cushion"
+  | "Emerald"
+  | "Oval"
+  | "Radiant"
+  | "Asscher"
+  | "Marquise"
+  | "Heart"
+  | "Pear";
 
-type DiamondColor = 'D' | 'E' | 'F' | 'G' | 'H' | 'I' | 'J' | 'K';
+type DiamondColor = "D" | "E" | "F" | "G" | "H" | "I" | "J" | "K";
 
-type DiamondClarity = 'FL' | 'IF' | 'VVS1' | 'VVS2' | 'VS1' | 'VS2' | 'SI1' | 'SI2';
+type DiamondClarity =
+  | "FL"
+  | "IF"
+  | "VVS1"
+  | "VVS2"
+  | "VS1"
+  | "VS2"
+  | "SI1"
+  | "SI2";
 
 type FilterProps = {
   onFilterChange: (filters: {
@@ -32,90 +49,105 @@ type FilterProps = {
   }) => void;
   search: string;
   onSearchChange: (value: string) => void;
+  diamondType: "natural" | "lab-grown";
 };
 
 const shapes: { type: DiamondShape; icon: string }[] = [
-  { type: 'Round', icon: RoundIcon },
-  { type: 'Princess', icon: PrincessIcon },
-  { type: 'Cushion', icon: CushionIcon },
-  { type: 'Emerald', icon: EmeraldIcon },
-  { type: 'Oval', icon: OvalIcon },
-  { type: 'Radiant', icon: RadiantIcon },
-  { type: 'Asscher', icon: AsscherIcon },
-  { type: 'Marquise', icon: MarquiseIcon },
-  { type: 'Heart', icon: HeartIcon },
-  { type: 'Pear', icon: PearIcon },
+  { type: "Round", icon: RoundIcon },
+  { type: "Princess", icon: PrincessIcon },
+  { type: "Cushion", icon: CushionIcon },
+  { type: "Emerald", icon: EmeraldIcon },
+  { type: "Oval", icon: OvalIcon },
+  { type: "Radiant", icon: RadiantIcon },
+  { type: "Asscher", icon: AsscherIcon },
+  { type: "Marquise", icon: MarquiseIcon },
+  { type: "Heart", icon: HeartIcon },
+  { type: "Pear", icon: PearIcon },
 ];
 
-const colors: DiamondColor[] = ['K', 'J', 'I', 'H', 'G', 'F', 'E', 'D'];
-const clarityGrades: DiamondClarity[] = ['SI2', 'SI1', 'VS2', 'VS1', 'VVS2', 'VVS1', 'IF', 'FL'];
+const colors: DiamondColor[] = ["K", "J", "I", "H", "G", "F", "E", "D"];
+const clarityGrades: DiamondClarity[] = [
+  "SI2",
+  "SI1",
+  "VS2",
+  "VS1",
+  "VVS2",
+  "VVS1",
+  "IF",
+  "FL",
+];
 
-export default function DiamondFilters({ onFilterChange, search, onSearchChange }: FilterProps) {
+export default function DiamondFilters({
+  onFilterChange,
+  search,
+  onSearchChange,
+  diamondType,
+}: FilterProps) {
   const [selectedShapes, setSelectedShapes] = useState<DiamondShape[]>([]);
   const [selectedColors, setSelectedColors] = useState<DiamondColor[]>([]);
   const [selectedClarity, setSelectedClarity] = useState<DiamondClarity[]>([]);
   const [priceRange, setPriceRange] = useState({ min: 0, max: 100000000 });
-  const [caratRange, setCaratRange] = useState({ min: 0.00, max: 50.00 });
+  const [caratRange, setCaratRange] = useState({ min: 0.0, max: 50.0 });
 
   const resetFilters = () => {
     setSelectedShapes([]);
     setSelectedColors([]);
     setSelectedClarity([]);
     setPriceRange({ min: 0, max: 100000000 });
-    setCaratRange({ min: 0.00, max: 50.00 });
+    setCaratRange({ min: 0.0, max: 50.0 });
     onFilterChange({
       shapes: [],
       priceRange: { min: 0, max: 50000000 },
-      caratRange: { min: 0.00, max: 50.00 },
+      caratRange: { min: 0.0, max: 50.0 },
       colors: [],
-      clarity: []
+      clarity: [],
     });
     onSearchChange("");
   };
 
   const handleShapeToggle = (shape: DiamondShape) => {
-    setSelectedShapes(prev => {
+    setSelectedShapes((prev) => {
       const newShapes = prev.includes(shape)
-        ? prev.filter(s => s !== shape)
+        ? prev.filter((s) => s !== shape)
         : [...prev, shape];
       onFilterChange({
         shapes: newShapes,
         priceRange,
         caratRange,
         colors: selectedColors,
-        clarity: selectedClarity
+        clarity: selectedClarity,
       });
       return newShapes;
     });
   };
 
   const handleColorToggle = (color: DiamondColor) => {
-    setSelectedColors(prev => {
+    setSelectedColors((prev) => {
       const newColors = prev.includes(color)
-        ? prev.filter(c => c !== color)
+        ? prev.filter((c) => c !== color)
         : [...prev, color];
       onFilterChange({
         shapes: selectedShapes,
         priceRange,
         caratRange,
         colors: newColors,
-        clarity: selectedClarity
+        clarity: selectedClarity,
       });
       return newColors;
     });
   };
 
   const handleClarityToggle = (clarity: DiamondClarity) => {
-    setSelectedClarity(prev => {
+    setSelectedClarity((prev) => {
       const newClarity = prev.includes(clarity)
-        ? prev.filter(c => c !== clarity)
+        ? prev.filter((c) => c !== clarity)
         : [...prev, clarity];
       onFilterChange({
         shapes: selectedShapes,
         priceRange,
         caratRange,
         colors: selectedColors,
-        clarity: newClarity
+        clarity: newClarity,
       });
       return newClarity;
     });
@@ -126,35 +158,38 @@ export default function DiamondFilters({ onFilterChange, search, onSearchChange 
 
   return (
     <div className="bg-white p-4">
-      <div className="mb-4">
-        <SearchInput
-          value={search}
-          onChange={onSearchChange}
-          placeholder="Search..."
-          onSearch={onSearchChange}
-        />
-      </div>
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-lg font-semibold text-gray-900">Filters</h2>
-        <button
-          onClick={resetFilters}
-          className="text-sm text-[#361111] hover:text-[#4a1717] font-medium flex items-center gap-1"
-        >
-          <svg
-            className="w-4 h-4"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
+        <div className="w-2/3">
+          <SearchInput
+            value={search}
+            onChange={onSearchChange}
+            onSearch={onSearchChange}
+            placeholder={`Search ${
+              diamondType === "natural" ? "Natural" : "Lab-Grown"
+            } Diamond Stock No. or Certificate No.`}
+          />
+        </div>
+        <div className="w-1/3 flex justify-end">
+          <button
+            onClick={resetFilters}
+            className="text-sm text-[#361111] hover:text-[#4a1717] font-medium flex items-center gap-1"
           >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
-            />
-          </svg>
-          Reset Filters
-        </button>
+            <svg
+              className="w-4 h-4"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+              />
+            </svg>
+            Reset Filters
+          </button>
+        </div>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         {/* Shape Selection */}
@@ -170,8 +205,8 @@ export default function DiamondFilters({ onFilterChange, search, onSearchChange 
                   onClick={() => handleShapeToggle(type)}
                   className={`aspect-square p-3 rounded-lg flex flex-col items-center justify-center transition-all ${
                     selectedShapes.includes(type)
-                      ? 'bg-[#361111] text-white'
-                      : 'bg-gray-50 hover:bg-gray-100 text-gray-700'
+                      ? "bg-[#361111] text-white"
+                      : "bg-gray-50 hover:bg-gray-100 text-gray-700"
                   }`}
                 >
                   <div className="flex-1 flex items-center justify-center">
@@ -180,7 +215,11 @@ export default function DiamondFilters({ onFilterChange, search, onSearchChange 
                       alt={type}
                       width={32}
                       height={32}
-                      className={`${selectedShapes.includes(type) ? 'brightness-0 invert' : ''}`}
+                      className={`${
+                        selectedShapes.includes(type)
+                          ? "brightness-0 invert"
+                          : ""
+                      }`}
                     />
                   </div>
                   <span className="text-xs mt-2">{type}</span>
@@ -199,14 +238,14 @@ export default function DiamondFilters({ onFilterChange, search, onSearchChange 
               max={100000000}
               step={100}
               value={priceRange}
-              onChange={newRange => {
+              onChange={(newRange) => {
                 setPriceRange(newRange);
                 onFilterChange({
                   shapes: selectedShapes,
                   priceRange: newRange,
                   caratRange,
                   colors: selectedColors,
-                  clarity: selectedClarity
+                  clarity: selectedClarity,
                 });
               }}
               formatValue={formatPrice}
@@ -220,14 +259,14 @@ export default function DiamondFilters({ onFilterChange, search, onSearchChange 
               Clarity
             </h3>
             <div className="flex gap-2 flex-wrap justify-between">
-              {clarityGrades.map(clarity => (
+              {clarityGrades.map((clarity) => (
                 <button
                   key={clarity}
                   onClick={() => handleClarityToggle(clarity)}
                   className={`px-3 py-1.5 rounded-md flex items-center text-xs justify-center transition-all ${
                     selectedClarity.includes(clarity)
-                      ? 'bg-[#361111] text-white'
-                      : 'bg-gray-50 hover:bg-gray-100 text-gray-700'
+                      ? "bg-[#361111] text-white"
+                      : "bg-gray-50 hover:bg-gray-100 text-gray-700"
                   }`}
                 >
                   {clarity}
@@ -244,18 +283,18 @@ export default function DiamondFilters({ onFilterChange, search, onSearchChange 
               Carat
             </h3>
             <RangeSlider
-              min={0.00}
-              max={50.00}
-              step={0.00}
+              min={0.0}
+              max={50.0}
+              step={0.0}
               value={caratRange}
-              onChange={newRange => {
+              onChange={(newRange) => {
                 setCaratRange(newRange);
                 onFilterChange({
                   shapes: selectedShapes,
                   priceRange,
                   caratRange: newRange,
                   colors: selectedColors,
-                  clarity: selectedClarity
+                  clarity: selectedClarity,
                 });
               }}
               formatValue={formatCarat}
@@ -269,14 +308,14 @@ export default function DiamondFilters({ onFilterChange, search, onSearchChange 
               Color
             </h3>
             <div className="flex gap-2 justify-between">
-              {colors.map(color => (
+              {colors.map((color) => (
                 <button
                   key={color}
                   onClick={() => handleColorToggle(color)}
                   className={`w-8 h-8 rounded-full flex items-center justify-center text-xs transition-all ${
                     selectedColors.includes(color)
-                      ? 'bg-[#361111] text-white'
-                      : 'bg-gray-50 hover:bg-gray-100 text-gray-700'
+                      ? "bg-[#361111] text-white"
+                      : "bg-gray-50 hover:bg-gray-100 text-gray-700"
                   }`}
                 >
                   {color}
@@ -288,4 +327,4 @@ export default function DiamondFilters({ onFilterChange, search, onSearchChange 
       </div>
     </div>
   );
-} 
+}

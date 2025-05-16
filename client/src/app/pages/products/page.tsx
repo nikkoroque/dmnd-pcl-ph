@@ -26,28 +26,35 @@ type DiamondClarity =
   | "VS2"
   | "SI1"
   | "SI2";
+type LabType = "Lab-Grown Diamond" | "Natural Diamond";
 
 type Product = {
-  ["Lot #"]: string;
-  Shape: string;
-  Color: string;
-  Clarity: string;
-  Weight: number;
-  Lab: string;
-  ["Diamond Parcel Price"]: number;
-  ["Total Amount"]: number;
-  ["Diamond Image"]: string;
+  id: number;
+  lot: string;
+  shape: string;
+  color: string;
+  clarity: string;
+  carat: number;
+  lab: string;
+  price: number;
+  displayedPrice: number;
+  image: string;
+  video: string;
+  labType: LabType;
   [key: string]: string | number;
 };
 
-export default function LabDiamondsPage() {
+export default function ProductsPage() {
   const [products, setProducts] = useState<Product[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1);
+  const [selectedLabType, setSelectedLabType] = useState<LabType | "all">(
+    "all"
+  );
   const [filters, setFilters] = useState({
     shapes: [] as DiamondShape[],
-    priceRange: { min: 200, max: 50000000 },
+    priceRange: { min: 0, max: 100000000 },
     caratRange: { min: 0.01, max: 50.0 },
     colors: [] as DiamondColor[],
     clarity: [] as DiamondClarity[],
@@ -62,19 +69,22 @@ export default function LabDiamondsPage() {
         const queryParams = new URLSearchParams({
           page: pageNumber.toString(),
           limit: limit.toString(),
+          ...(selectedLabType !== "all" && { labType: selectedLabType }),
           ...(filters.shapes.length > 0 && { shape: filters.shapes.join(",") }),
           ...(filters.colors.length > 0 && { color: filters.colors.join(",") }),
           ...(filters.clarity.length > 0 && {
             clarity: filters.clarity.join(","),
           }),
-          minPrice: filters.priceRange.min.toString(),
-          maxPrice: filters.priceRange.max.toString(),
+          minDisplayedPrice: filters.priceRange.min.toString(),
+          maxDisplayedPrice: filters.priceRange.max.toString(),
           minCarat: filters.caratRange.min.toString(),
           maxCarat: filters.caratRange.max.toString(),
           ...(searchTerm && { search: searchTerm }),
         });
 
-        const res = await fetch(`/api/lab-diamonds?${queryParams}`);
+        const res = await fetch(
+          `https://api.tdapi.xyz/api/v1/products?${queryParams}`
+        );
         const data = await res.json();
         setProducts(data.data);
         setTotal(data.total);
@@ -84,7 +94,7 @@ export default function LabDiamondsPage() {
         setIsLoading(false);
       }
     },
-    [filters, limit, search]
+    [filters, limit, search, selectedLabType]
   );
 
   const handlePageChange = async (newPage: number) => {
@@ -105,7 +115,25 @@ export default function LabDiamondsPage() {
 
   return (
     <AppLayout>
-      <DiamondToggle currentType="lab-grown" />
+      <DiamondToggle
+        currentType={
+          selectedLabType === "all"
+            ? "all"
+            : selectedLabType === "Lab-Grown Diamond"
+            ? "lab-grown"
+            : "natural"
+        }
+        onTypeChange={(type) => {
+          setSelectedLabType(
+            type === "all"
+              ? "all"
+              : type === "lab-grown"
+              ? "Lab-Grown Diamond"
+              : "Natural Diamond"
+          );
+          setPage(1);
+        }}
+      />
       <div className="container mx-auto px-4 py-8">
         <DiamondFilters
           onFilterChange={(newFilters) => {
@@ -114,12 +142,18 @@ export default function LabDiamondsPage() {
           }}
           search={search}
           onSearchChange={setSearch}
-          diamondType="lab-grown"
+          diamondType={
+            selectedLabType === "all"
+              ? "all"
+              : selectedLabType === "Lab-Grown Diamond"
+              ? "lab-grown"
+              : "natural"
+          }
         />
         <hr className="my-6" />
         {/* Products count info */}
         <div className="text-sm text-gray-600 mb-6">
-          Showing {showingStart}-{showingEnd} of {total} lab-grown diamonds
+          Showing {showingStart}-{showingEnd} of {total} diamonds
         </div>
 
         {/* Products grid */}
@@ -134,18 +168,20 @@ export default function LabDiamondsPage() {
               ))
             : products.map((product) => (
                 <ProductCard
-                  key={product["Lot #"]}
+                  key={product.id}
                   product={product}
-                  diamondType="lab"
+                  diamondType={
+                    product.labType === "Lab-Grown Diamond" ? "lab" : "natural"
+                  }
                   fieldMapping={{
-                    lotNumber: "Lot #",
-                    shape: "Shape",
-                    color: "Color",
-                    clarity: "Clarity",
-                    weight: "Weight",
-                    lab: "Lab",
-                    price: "Diamond Parcel Price",
-                    image: "Diamond Image",
+                    lotNumber: "lot",
+                    shape: "shape",
+                    color: "color",
+                    clarity: "clarity",
+                    weight: "carat",
+                    lab: "lab",
+                    price: "price",
+                    image: "image",
                   }}
                 />
               ))}
@@ -262,11 +298,6 @@ export default function LabDiamondsPage() {
                 />
               </svg>
             </button>
-          </div>
-
-          {/* Page info */}
-          <div className="text-sm text-gray-500 font-medium">
-            Page {page} of {totalPages}
           </div>
         </div>
       </div>

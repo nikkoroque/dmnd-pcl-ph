@@ -49,7 +49,22 @@ type FilterProps = {
   }) => void;
   search: string;
   onSearchChange: (value: string) => void;
-  diamondType: "natural" | "lab-grown";
+  diamondType: "natural" | "lab-grown" | "all";
+};
+
+type CaratRange = {
+  min: string;
+  max: string;
+};
+
+type PriceRange = {
+  min: string;
+  max: string;
+};
+
+type PriceRangeNumber = {
+  min: number;
+  max: number;
 };
 
 const shapes: { type: DiamondShape; icon: string }[] = [
@@ -86,18 +101,24 @@ export default function DiamondFilters({
   const [selectedShapes, setSelectedShapes] = useState<DiamondShape[]>([]);
   const [selectedColors, setSelectedColors] = useState<DiamondColor[]>([]);
   const [selectedClarity, setSelectedClarity] = useState<DiamondClarity[]>([]);
-  const [priceRange, setPriceRange] = useState({ min: 0, max: 100000000 });
-  const [caratRange, setCaratRange] = useState({ min: 0.0, max: 50.0 });
+  const [priceRange, setPriceRange] = useState<PriceRange>({
+    min: "0",
+    max: "100000000",
+  });
+  const [caratRange, setCaratRange] = useState<CaratRange>({
+    min: "0.00",
+    max: "50.00",
+  });
 
   const resetFilters = () => {
     setSelectedShapes([]);
     setSelectedColors([]);
     setSelectedClarity([]);
-    setPriceRange({ min: 0, max: 100000000 });
-    setCaratRange({ min: 0.0, max: 50.0 });
+    setPriceRange({ min: "0", max: "100000000" });
+    setCaratRange({ min: "0.00", max: "50.00" });
     onFilterChange({
       shapes: [],
-      priceRange: { min: 0, max: 50000000 },
+      priceRange: { min: 0, max: 100000000 },
       caratRange: { min: 0.0, max: 50.0 },
       colors: [],
       clarity: [],
@@ -112,8 +133,14 @@ export default function DiamondFilters({
         : [...prev, shape];
       onFilterChange({
         shapes: newShapes,
-        priceRange,
-        caratRange,
+        priceRange: {
+          min: Number(priceRange.min),
+          max: Number(priceRange.max),
+        },
+        caratRange: {
+          min: parseFloat(caratRange.min),
+          max: parseFloat(caratRange.max),
+        },
         colors: selectedColors,
         clarity: selectedClarity,
       });
@@ -128,8 +155,14 @@ export default function DiamondFilters({
         : [...prev, color];
       onFilterChange({
         shapes: selectedShapes,
-        priceRange,
-        caratRange,
+        priceRange: {
+          min: Number(priceRange.min),
+          max: Number(priceRange.max),
+        },
+        caratRange: {
+          min: parseFloat(caratRange.min),
+          max: parseFloat(caratRange.max),
+        },
         colors: newColors,
         clarity: selectedClarity,
       });
@@ -144,8 +177,14 @@ export default function DiamondFilters({
         : [...prev, clarity];
       onFilterChange({
         shapes: selectedShapes,
-        priceRange,
-        caratRange,
+        priceRange: {
+          min: Number(priceRange.min),
+          max: Number(priceRange.max),
+        },
+        caratRange: {
+          min: parseFloat(caratRange.min),
+          max: parseFloat(caratRange.max),
+        },
         colors: selectedColors,
         clarity: newClarity,
       });
@@ -154,7 +193,7 @@ export default function DiamondFilters({
   };
 
   const formatPrice = (value: number) => `₱${value.toLocaleString()}`;
-  const formatCarat = (value: number) => value.toFixed(2);
+  const formatCarat = (value: string) => `${value} ct`;
 
   return (
     <div className="bg-white p-4">
@@ -165,7 +204,11 @@ export default function DiamondFilters({
             onChange={onSearchChange}
             onSearch={onSearchChange}
             placeholder={`Search ${
-              diamondType === "natural" ? "Natural" : "Lab-Grown"
+              diamondType === "all"
+                ? "Diamond"
+                : diamondType === "natural"
+                ? "Natural"
+                : "Lab-Grown"
             } Diamond Stock No. or Certificate No.`}
           />
         </div>
@@ -236,20 +279,33 @@ export default function DiamondFilters({
             <RangeSlider
               min={0}
               max={100000000}
-              step={100}
-              value={priceRange}
+              step={1000}
+              value={{
+                min: Number(priceRange.min),
+                max: Number(priceRange.max),
+              }}
               onChange={(newRange) => {
-                setPriceRange(newRange);
+                const newPriceRange = {
+                  min: newRange.min.toString(),
+                  max: newRange.max.toString(),
+                };
+                setPriceRange(newPriceRange);
                 onFilterChange({
                   shapes: selectedShapes,
-                  priceRange: newRange,
-                  caratRange,
+                  priceRange: {
+                    min: Number(newPriceRange.min),
+                    max: Number(newPriceRange.max),
+                  },
+                  caratRange: {
+                    min: parseFloat(caratRange.min),
+                    max: parseFloat(caratRange.max),
+                  },
                   colors: selectedColors,
                   clarity: selectedClarity,
                 });
               }}
               formatValue={formatPrice}
-              inputStep={100}
+              isStringValue={true}
             />
           </div>
 
@@ -279,26 +335,35 @@ export default function DiamondFilters({
         {/* Carat Range and Color */}
         <div>
           <div className="mb-8">
-            <h3 className="text-sm font-semibold text-gray-700 mb-4 flex items-center">
-              Carat
-            </h3>
+            <h3 className="text-sm font-semibold text-gray-700 mb-4">Carat</h3>
             <RangeSlider
               min={0.0}
               max={50.0}
-              step={0.0}
-              value={caratRange}
+              step={0.01}
+              value={{
+                min: parseFloat(caratRange.min),
+                max: parseFloat(caratRange.max),
+              }}
               onChange={(newRange) => {
-                setCaratRange(newRange);
+                const newCaratRange = {
+                  min: newRange.min.toFixed(2),
+                  max: newRange.max.toFixed(2),
+                };
+                setCaratRange(newCaratRange);
                 onFilterChange({
                   shapes: selectedShapes,
                   priceRange,
-                  caratRange: newRange,
+                  caratRange: {
+                    min: parseFloat(newCaratRange.min),
+                    max: parseFloat(newCaratRange.max),
+                  },
                   colors: selectedColors,
                   clarity: selectedClarity,
                 });
               }}
-              formatValue={formatCarat}
+              formatValue={(value) => formatCarat(value.toFixed(2))}
               inputStep={0.01}
+              isStringValue={true}
             />
           </div>
 

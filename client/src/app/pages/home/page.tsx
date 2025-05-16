@@ -1,9 +1,9 @@
 "use client";
-import React from 'react'
-import NaturalDiamondsPage from '../natural-diamonds/page'
+import React from "react";
+import ProductsPage from "../products/page";
 
 const HomePage = () => {
-  return <NaturalDiamondsPage />
-}
+  return <ProductsPage />;
+};
 
-export default HomePage
+export default HomePage;

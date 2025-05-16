@@ -62,11 +62,6 @@ type PriceRange = {
   max: string;
 };
 
-type PriceRangeNumber = {
-  min: number;
-  max: number;
-};
-
 const shapes: { type: DiamondShape; icon: string }[] = [
   { type: "Round", icon: RoundIcon },
   { type: "Princess", icon: PrincessIcon },
@@ -205,11 +200,11 @@ export default function DiamondFilters({
             onSearch={onSearchChange}
             placeholder={`Search ${
               diamondType === "all"
-                ? "Diamond"
+                ? ""
                 : diamondType === "natural"
-                ? "Natural"
-                : "Lab-Grown"
-            } Diamond Stock No. or Certificate No.`}
+                ? "Natural "
+                : "Lab-Grown "
+            }Diamond Stock No. or Certificate No.`}
           />
         </div>
         <div className="w-1/3 flex justify-end">
@@ -293,8 +288,8 @@ export default function DiamondFilters({
                 onFilterChange({
                   shapes: selectedShapes,
                   priceRange: {
-                    min: Number(newPriceRange.min),
-                    max: Number(newPriceRange.max),
+                    min: parseFloat(newPriceRange.min),
+                    max: parseFloat(newPriceRange.max),
                   },
                   caratRange: {
                     min: parseFloat(caratRange.min),
@@ -352,7 +347,10 @@ export default function DiamondFilters({
                 setCaratRange(newCaratRange);
                 onFilterChange({
                   shapes: selectedShapes,
-                  priceRange,
+                  priceRange: {
+                    min: parseFloat(priceRange.min),
+                    max: parseFloat(priceRange.max),
+                  },
                   caratRange: {
                     min: parseFloat(newCaratRange.min),
                     max: parseFloat(newCaratRange.max),

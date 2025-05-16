@@ -101,13 +101,22 @@ export default function ProductDetailPage() {
           <div className="space-y-6">
             <div className="relative aspect-square bg-white overflow-hidden">
               {product.video ? (
-                <iframe
-                  src={product.video}
-                  className="w-full h-full"
-                  allowFullScreen
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  style={{ border: "none" }}
-                />
+                <>
+                  <Image
+                    src={DiamondPlaceholder}
+                    alt={`Diamond ${product.lot}`}
+                    fill
+                    sizes="(max-width: 768px) 100vw, 50vw"
+                    className="object-cover"
+                  />
+                  <iframe
+                    src={product.video}
+                    className="w-full h-full absolute top-0 left-0"
+                    allowFullScreen
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    style={{ border: "none" }}
+                  />
+                </>
               ) : (
                 <Image
                   src={product.image || DiamondPlaceholder}
@@ -220,16 +229,40 @@ export default function ProductDetailPage() {
               </div>
               <div className="px-6 py-4 flex justify-between items-center bg-white">
                 <span className="text-gray-700 font-medium">Certificate:</span>
-                <a
-                  href={product.certLink}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-[#361111] hover:text-[#4a1717] font-semibold"
-                >
+                <span className="text-gray-900 font-semibold">
                   {product.certificate}
-                </a>
+                </span>
               </div>
             </div>
+            {product.certLink && (
+              <a
+                href={product.certLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center w-full px-6 py-3 bg-[#361111] text-white rounded-lg hover:bg-[#4a1717] transition-colors"
+              >
+                <svg
+                  className="w-5 h-5 mr-2"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                  />
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                  />
+                </svg>
+                View Certificate
+              </a>
+            )}
           </div>
         </div>
       </div>

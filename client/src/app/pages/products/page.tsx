@@ -75,17 +75,21 @@ export default function ProductsPage() {
           ...(filters.clarity.length > 0 && {
             clarity: filters.clarity.join(","),
           }),
-          minDisplayedPrice: filters.priceRange.min.toString(),
-          maxDisplayedPrice: filters.priceRange.max.toString(),
+          minPrice: filters.priceRange.min.toString(),
+          maxPrice: filters.priceRange.max.toString(),
           minCarat: filters.caratRange.min.toString(),
           maxCarat: filters.caratRange.max.toString(),
           ...(searchTerm && { search: searchTerm }),
         });
 
+        console.log('Price filter range:', filters.priceRange);
+        console.log('API URL:', `https://api.tdapi.xyz/api/v1/products?${queryParams}`);
+
         const res = await fetch(
           `https://api.tdapi.xyz/api/v1/products?${queryParams}`
         );
         const data = await res.json();
+        console.log('API Response:', data.data.map((p: Product) => ({ id: p.id, price: p.price, displayedPrice: p.displayedPrice })));
         setProducts(data.data);
         setTotal(data.total);
       } catch (error) {
@@ -170,19 +174,6 @@ export default function ProductsPage() {
                 <ProductCard
                   key={product.id}
                   product={product}
-                  diamondType={
-                    product.labType === "Lab-Grown Diamond" ? "lab" : "natural"
-                  }
-                  fieldMapping={{
-                    lotNumber: "lot",
-                    shape: "shape",
-                    color: "color",
-                    clarity: "clarity",
-                    weight: "carat",
-                    lab: "lab",
-                    price: "price",
-                    image: "image",
-                  }}
                 />
               ))}
         </div>

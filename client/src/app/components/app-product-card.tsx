@@ -20,31 +20,9 @@ type Product = {
 
 type ProductCardProps = {
   product: Product;
-  diamondType: "lab" | "natural";
-  fieldMapping?: {
-    lotNumber: string;
-    shape: string;
-    color: string;
-    clarity: string;
-    weight: string;
-    lab: string;
-    price: string;
-    image: string;
-  };
 };
 
-export default function ProductCard({
-  product,
-  diamondType,
-  fieldMapping,
-}: ProductCardProps) {
-  const getField = (field: string) => {
-    if (fieldMapping) {
-      return product[fieldMapping[field as keyof typeof fieldMapping]];
-    }
-    return product[field];
-  };
-
+export default function ProductCard({ product }: ProductCardProps) {
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat("en-PH", {
       style: "currency",
